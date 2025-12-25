@@ -117,22 +117,6 @@ You can customize these in Railway's Variables tab:
 | `PB_VERSION` | `0.23.6` | PocketBase version to install |
 | `PORT` | Auto-set by Railway | Port to run PocketBase on |
 
-## Local Development
-
-To run PocketBase locally:
-
-```bash
-# Download PocketBase
-wget https://github.com/pocketbase/pocketbase/releases/download/v0.23.6/pocketbase_0.23.6_linux_amd64.zip
-unzip pocketbase_0.23.6_linux_amd64.zip
-chmod +x pocketbase
-
-# Start server
-./pocketbase serve
-```
-
-Visit `http://localhost:8090` to see your local instance.
-
 ## Updating PocketBase Version
 
 To update to a newer version:
