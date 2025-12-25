@@ -1,6 +1,6 @@
 # PocketBase on Railway
 
-Deploy [PocketBase](https://pocketbase.io/) on Railway with one click.
+Deploy [PocketBase](https://pocketbase.io/) on Railway with a simple Dockerfile.
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/your-template-id)
 
@@ -13,59 +13,109 @@ PocketBase is an open-source backend consisting of:
 - Simple REST-ish API
 - File storage (local or S3)
 
-## Features
+## Deployment Steps
 
-- ✅ One-click deployment
-- ✅ Persistent storage with Railway volumes
-- ✅ Automatic HTTPS
-- ✅ Admin UI included
-- ✅ Ready for production use
+### 1. Create a New Project on Railway
 
-## Deployment
+1. Go to [Railway.app](https://railway.app)
+2. Click "New Project"
+3. Select "Deploy from GitHub repo"
+4. Connect and select this repository
 
-1. Click the "Deploy on Railway" button above
-2. Configure your project name (optional)
-3. Wait for deployment to complete
-4. Access your PocketBase instance at the provided Railway URL
-5. Navigate to `/_/` to access the admin panel
-6. Create your admin account on first visit
+### 2. Configure Service Settings
 
-## Configuration
+After deployment, configure these settings in Railway UI:
 
-### Environment Variables
+#### Service Settings:
+- **Build Method**: Dockerfile
+- **Dockerfile Path**: `Dockerfile` (default)
 
-You can add these optional environment variables in Railway:
+#### Service Variables:
+- Add variable: `PORT` (Railway provides this automatically, but ensure it's available)
+- Optional: `PB_VERSION` = `0.23.6` (or your preferred version)
 
-- `PB_VERSION` - PocketBase version (default: 0.23.6)
+#### Deploy Settings:
+- **Start Command**: (Leave empty, Dockerfile CMD will be used)
+- **Restart Policy**: On Failure
+- **Health Check**: (Optional) Path: `/_/`
 
-### Adding a Volume
+### 3. Add Volume for Data Persistence
 
-For persistent data storage:
+**Critical Step** - Without this, your data will be lost on redeployment!
 
-1. Go to your service settings in Railway
-2. Click on "Volumes"
-3. Add a new volume mounted at `/pb/pb_data`
+1. Go to your service in Railway
+2. Click on "Settings" tab
+3. Scroll to "Volumes"
+4. Click "Add Volume"
+5. Set mount path: `/pb/pb_data`
+6. Click "Add"
 
-This ensures your database persists across deployments.
+### 4. Generate Domain
 
-## Connecting to Your PocketBase
+1. In your service, go to "Settings"
+2. Find "Networking" section
+3. Click "Generate Domain"
+4. Your PocketBase will be available at the generated URL
 
-After deployment, your PocketBase instance will be available at:
-```
-https://your-project-name.railway.app
-```
+## Accessing Your PocketBase
+
+After deployment completes:
+
+### First-Time Setup (Creating Admin Account)
+
+**Important:** On first deployment, PocketBase generates a special installation URL with a token. You need to use this URL to create your admin account.
+
+1. Go to your Railway service **"Deployments"** tab
+2. Click on the latest deployment to view logs
+3. Look for a line that says: `Launch the URL below in the browser...`
+4. Copy the installation URL that looks like:
+   ```
+   http://0.0.0.0:8080/_/#/pbinstal/eyJhbGci...LONG_TOKEN_HERE
+   ```
+5. Replace `http://0.0.0.0:8080` with your Railway domain:
+   ```
+   https://your-project.railway.app/_/#/pbinstal/eyJhbGci...LONG_TOKEN_HERE
+   ```
+6. Visit this URL to create your admin account
+
+**Alternative method** if the token expires:
+1. Go to your service in Railway
+2. Open the **Terminal/Shell**
+3. Run: `/pb/pocketbase superuser upsert your@email.com yourpassword`
 
 ### Admin Dashboard
-Access the admin UI at:
+After creating your account, access the admin UI at:
 ```
-https://your-project-name.railway.app/_/
+https://your-project.railway.app/_/
 ```
 
 ### API Endpoint
 Your API is available at:
 ```
-https://your-project-name.railway.app/api/
+https://your-project.railway.app/api/
 ```
+
+## Manual Configuration in Railway UI
+
+If deploying without the Deploy button, here's the complete manual setup:
+
+1. **Create New Project** → Empty Project
+2. **Add Service** → GitHub Repo
+3. **Service Settings**:
+   - Builder: Dockerfile
+4. **Add Volume**:
+   - Mount Path: `/pb/pb_data`
+5. **Generate Domain**
+6. **Deploy**
+
+## Environment Variables (Optional)
+
+You can customize these in Railway's Variables tab:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PB_VERSION` | `0.23.6` | PocketBase version to install |
+| `PORT` | Auto-set by Railway | Port to run PocketBase on |
 
 ## Local Development
 
@@ -82,6 +132,46 @@ chmod +x pocketbase
 ```
 
 Visit `http://localhost:8090` to see your local instance.
+
+## Updating PocketBase Version
+
+To update to a newer version:
+
+1. Change the `PB_VERSION` variable in Railway
+2. Redeploy the service
+3. Your data will persist in the volume
+
+## Features
+
+- ✅ Simple Dockerfile deployment
+- ✅ Persistent storage with Railway volumes
+- ✅ Automatic HTTPS
+- ✅ Admin UI included
+- ✅ Ready for production use
+- ✅ Easy version updates
+
+## Repository Structure
+
+```
+.
+├── Dockerfile          # Container configuration
+└── README.md          # This file
+```
+
+## Troubleshooting
+
+### Service won't start
+- Check that the volume is mounted at `/pb/pb_data`
+- Verify PORT variable is available
+- Check Railway logs for errors
+
+### Data lost after redeploy
+- Ensure volume is properly configured and mounted
+- Volume must be at `/pb/pb_data`
+
+### Can't access admin dashboard
+- Navigate to `/_/` (with trailing slash)
+- Create admin account if first time
 
 ## Documentation
 
