@@ -13,6 +13,57 @@ PocketBase is an open-source backend consisting of:
 - Simple REST-ish API
 - File storage (local or S3)
 
+# Deploy and Host
+
+## About Hosting
+
+Hosting PocketBase on Railway provides a cloud-based solution for running your backend without managing servers. Railway offers automatic deployments, built-in HTTPS, persistent storage through volumes, and a generous free tier perfect for development and small production workloads. The platform handles infrastructure concerns while you focus on building your application.
+
+## Why Deploy
+
+Deploying PocketBase to Railway gives you several advantages over local development or traditional hosting:
+
+- **Instant Accessibility**: Your backend is immediately available via HTTPS with a public URL
+- **Zero Server Management**: No need to configure servers, SSL certificates, or worry about infrastructure
+- **Automatic Scaling**: Railway handles traffic spikes without manual intervention
+- **Persistent Storage**: Built-in volume support ensures your data survives redeployments
+- **Cost Effective**: Free tier for small projects, pay-as-you-grow pricing
+- **CI/CD Integration**: Automatic deployments from GitHub on every push
+- **Development to Production**: Seamless progression from prototype to production-ready backend
+
+## Common Use Cases
+
+PocketBase on Railway is ideal for:
+
+- **Mobile App Backends**: Provide authentication, database, and file storage for iOS/Android apps
+- **SaaS MVPs**: Rapidly prototype and launch software-as-a-service products
+- **Internal Tools**: Build admin dashboards and internal applications for your team
+- **Client Projects**: Deliver complete backend solutions for web development clients
+- **Personal Projects**: Host hobby projects and side businesses without infrastructure overhead
+- **Prototypes & Demos**: Quickly spin up functional backends for proof-of-concepts
+- **JAMstack Applications**: Power static sites with dynamic data and user authentication
+- **IoT Data Collection**: Store and manage data from IoT devices and sensors
+
+## Dependencies
+
+### Deployment Dependencies
+
+This deployment requires:
+
+- **Railway Account**: Free account at [railway.app](https://railway.app)
+- **GitHub Account**: For repository connection and automatic deployments
+- **Docker**: Railway uses the provided Dockerfile (no local Docker installation needed)
+- **Git Repository**: This repository cloned or forked to your GitHub account
+
+**Runtime Dependencies** (automatically handled):
+- PocketBase binary (downloaded during build based on `PB_VERSION`)
+- SQLite (embedded in PocketBase)
+- Linux environment (provided by Railway container)
+
+**Optional Dependencies**:
+- Custom domain (can use Railway's generated domain)
+- S3-compatible storage (for external file storage instead of local)
+
 ## Deployment Steps
 
 ### 1. Create a New Project on Railway
